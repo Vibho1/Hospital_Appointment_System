@@ -1,0 +1,54 @@
+#tk.label and tk.button is used to create labels and buttons on the GUI screen. Every button
+# contains a command in it which includes a function to be executed on click of the button.
+#The function logintodb is created to login into the MySQL Database. The save query includes 
+# the query to be executed on the click of the submit button.
+#X and Y are the parameters given to adjust objects on the Tkinter window.
+#Root.mainloop() is included at the last indicating that only components within it are included in the window.
+
+from tkinter import *
+from tkinter import messagebox as ms
+import mysql.connector
+from PIL import ImageTk,Image
+
+global hostName , db_username, db_password, db_database, db_d
+
+# hostName = "192.168.1.239"
+hostName = "localhost"
+db_username = "project"
+db_password = "project"
+db_database = "database"
+
+db = mysql.connector.connect(host=hostName,
+                     user=db_username,
+                     password=db_password,
+                     database=db_database)
+c = db.cursor()
+
+db.commit()
+db.close()
+
+class main:
+    def _init_(self,master):
+    
+        self.master = master
+       
+        self.username = StringVar()
+        self.password = StringVar()
+        self.n_username = StringVar()
+        self.n_password = StringVar()
+        
+        self.widgets()
+
+    def login(self):
+        db = mysql.connector.connect(host=hostName,
+                     user=db_username,
+                     password=db_password,
+                     database=db_database)
+        c = db.cursor()
+
+        find_user = ('SELECT * FROM user WHERE username = %s and password = %s')
+        c.execute(find_user,[(self.username.get()),(self.password.get())])
+        result = c.fetchall()
+        if result:
+            top=Toplevel()
+            top.title("appointment window")
